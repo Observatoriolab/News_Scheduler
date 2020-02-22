@@ -1,1 +1,1 @@
-clock: python simple_scheduler.py
+clock: python simple_scheduler
