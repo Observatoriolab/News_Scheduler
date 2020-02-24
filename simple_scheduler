@@ -27,13 +27,19 @@ def job():
     print("----------------------------------------")
 
     unjson = json.dumps(parse_data, indent=4, sort_keys=True)
-    print(unjson)
+    d = json.loads(unjson)
+    print(d['rss']['channel']['item'])
 
-    data = {"subject":"un json gigante", "body": unjson}
+    #Se tienen todas las noticias enlistadas en "data"
+    #realData = {"data": d['rss']['channel']['item']}
 
-    reply = requests.post(url = API_ENDPOINT_TO_POST, data = data) 
 
-    print(reply)
+
+    #data = {"subject":"un json gigante", "body": unjson}
+
+    #reply = requests.post(url = API_ENDPOINT_TO_POST, data = data) 
+
+    #print(reply)
 
 
 
