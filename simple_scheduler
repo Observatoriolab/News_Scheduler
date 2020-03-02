@@ -3,18 +3,22 @@ import time
 import requests 
 import json
 import xmltodict
+from ast import literal_eval
+
+#Variable global
+global newsBotKey
+newsBotKey = ""
+
 def job():
     print('Im working on it...')
-    # defining the api-endpoint  
+    # Defining the api-endpoints  
+    # Aqui estan las noticias que se descargan en formato xml
     API_ENDPOINT = "https://dl.dropboxusercontent.com/s/neru9qom4pntr5z/feed_rss.xml?dl=0"
-    API_ENDPOINT_TO_POST = "https://satelite-noticias.herokuapp.com/api/messages/"
+    # Aqui esta el endpoint para postear las noticias  (Localmente)
+    API_ENDPOINT_TO_POST = "http://127.0.0.1:8000/api/questions/"
     
-    # your API key here 
-    API_KEY = "c0dfaf5ee7911c7fa784648706b25561"
-    
-    #https://dl.dropboxusercontent.com/s/neruqom4pntr5z/feed_rss.xml?dl=0
-    
-    # data to be sent to api 
+
+    # data to be sent to api in satelite nnoticias
     #data = {"subject": "hola", "body": "un mensaje"}
     
     # sending post request and saving response as response object 
@@ -28,24 +32,50 @@ def job():
 
     unjson = json.dumps(parse_data, indent=4, sort_keys=True)
     d = json.loads(unjson)
-    print(d['rss']['channel']['item'])
+    #print(d['rss']['channel']['item'])
 
     #Se tienen todas las noticias enlistadas en "data"
     realData =  d['rss']['channel']['item']
 
 
-    unjson = json.dumps(realData, indent=4, sort_keys=True)
+    unjson = json.loads(json.dumps(realData, indent=4, sort_keys=True))
+    '''
+    print("el json de todos los tiempos")
+    print(unjson[0])
+    print("Un pedacito")
+    print(unjson[0]["title"])
+
+    print(newsBotKey)
+    '''
+    #Aqui recien se tiene un ejemplo de noticia
+
+    for news_single in unjson:
+        data = {"content": news_single["title"]}
+        reply = requests.post(url = API_ENDPOINT_TO_POST, data = data, headers = {"Authorization": newsBotKey}) 
+        print(reply)
 
 
-    data = {"subject":"un json gigante", "body": unjson}
+def createNewsBot():
+    print('Im working on it...')
+    API_ENDPOINT = "http://127.0.0.1:8000/api/rest-auth/registration/"
+    
+    data = {
+            "username": "NewsBot",
+            "email": "leiser.mahu@gmail.com",
+            "password1":"changeme123",
+            "password2": "changeme123"
+	
+    }
+    reply = requests.post(url = API_ENDPOINT, data = data) 
 
-    reply = requests.post(url = API_ENDPOINT_TO_POST, data = data) 
-
-    print(reply)
-
-
+    print(json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True)). values() )   
+    supposedStrKey = json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True))["key"]
+    print('-'*20)
+    print(supposedStrKey)
+    return "Token "+ supposedStrKey
 
 #Llamado a la funcion afuera del job
+newsBotKey = createNewsBot()
 schedule.every(10).seconds.do(job)
 
 while True:
