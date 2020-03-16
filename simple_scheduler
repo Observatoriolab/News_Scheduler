@@ -8,14 +8,15 @@ from ast import literal_eval
 #Variable global
 global newsBotKey
 newsBotKey = ""
-
+global newsBotCookie
+newsBotCookie = ""
 def job():
     print('Im working on it...')
     # Defining the api-endpoints  
     # Aqui estan las noticias que se descargan en formato xml
     API_ENDPOINT = "https://dl.dropboxusercontent.com/s/neru9qom4pntr5z/feed_rss.xml?dl=0"
     # Aqui esta el endpoint para postear las noticias  (Localmente)
-    API_ENDPOINT_TO_POST = "http://127.0.0.1:8000/api/questions/"
+    API_ENDPOINT_TO_POST = "http://127.0.0.1:8000/api/news/"
     
 
     # data to be sent to api in satelite nnoticias
@@ -48,9 +49,11 @@ def job():
     print(newsBotKey)
     '''
     #Aqui recien se tiene un ejemplo de noticia
-
+    print('este es el kuky')
+    print(newsBotCookie)
     for news_single in unjson:
-        data = {"content": news_single["title"]}
+        print(news_single)
+        data = {"title": news_single["title"],"content": news_single["description"],"tags": ["tag1"]}
         reply = requests.post(url = API_ENDPOINT_TO_POST, data = data, headers = {"Authorization": newsBotKey}) 
         print(reply)
 
@@ -67,15 +70,18 @@ def createNewsBot():
 	
     }
     reply = requests.post(url = API_ENDPOINT, data = data) 
-
+    print('esto fue lo que me respondieron')
+    print(reply.content)
     print(json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True)). values() )   
     supposedStrKey = json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True))["key"]
+    print(reply.cookies.items()[0][1])
+    supposedStrCookie = reply.cookies.items()[0][1]
     print('-'*20)
     print(supposedStrKey)
-    return "Token "+ supposedStrKey
+    return "Token "+ supposedStrKey, supposedStrCookie
 
 #Llamado a la funcion afuera del job
-newsBotKey = createNewsBot()
+newsBotKey,newsBotCookie = createNewsBot()
 schedule.every(10).seconds.do(job)
 
 while True:
