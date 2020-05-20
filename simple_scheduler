@@ -10,20 +10,24 @@ global newsBotKey
 newsBotKey = ""
 global newsBotCookie
 newsBotCookie = ""
+API_ENDPOINT_TO_POST = "http://localhost:8000/api/news/"
+#API_ENDPOINT_TO_POST = "https://satelite-noticias.herokuapp.com/api/news/"
+
+API_ENDPOINT = "http://localhost:8000/api/rest-auth/registration/"
+#API_ENDPOINT = "https://satelite-noticias.herokuapp.com/api/rest-auth/registration/"
 def job():
     print('Im working on it...')
     # Defining the api-endpoints  
     # Aqui estan las noticias que se descargan en formato xml
-    API_ENDPOINT = "https://dl.dropboxusercontent.com/s/neru9qom4pntr5z/feed_rss.xml?dl=0"
+    API_ENDPOINT_DATA = "https://dl.dropboxusercontent.com/s/neru9qom4pntr5z/feed_rss.xml?dl=0"
     # Aqui esta el endpoint para postear las noticias  (Localmente)
-    API_ENDPOINT_TO_POST = "http://127.0.0.1:8000/api/news/"
     
 
     # data to be sent to api in satelite nnoticias
     #data = {"subject": "hola", "body": "un mensaje"}
     
     # sending post request and saving response as response object 
-    r = requests.get(url = API_ENDPOINT) 
+    r = requests.get(url = API_ENDPOINT_DATA) 
     #Transformar formato byte a string con codificacion utf-8
     rssContent = r.content.decode("utf-8") 
     parse_data = xmltodict.parse(rssContent)
@@ -51,6 +55,7 @@ def job():
     #Aqui recien se tiene un ejemplo de noticia
     print('este es el kuky')
     print(newsBotCookie)
+    print(unjson)
     for news_single in unjson:
         print(news_single)
         data = {"title": news_single["title"],"content": news_single["description"],"tags": ["tag1"]}
@@ -60,7 +65,6 @@ def job():
 
 def createNewsBot():
     print('Im working on it...')
-    API_ENDPOINT = "http://127.0.0.1:8000/api/rest-auth/registration/"
     
     data = {
             "username": "NewsBot",
