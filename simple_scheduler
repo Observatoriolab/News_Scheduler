@@ -10,11 +10,11 @@ global newsBotKey
 newsBotKey = ""
 global newsBotCookie
 newsBotCookie = ""
-API_ENDPOINT_TO_POST = "http://localhost:8000/api/news/"
-#API_ENDPOINT_TO_POST = "https://satelite-noticias.herokuapp.com/api/news/"
+#API_ENDPOINT_TO_POST = "http://localhost:8000/api/news/"
+API_ENDPOINT_TO_POST = "https://satelite-noticias.herokuapp.com/api/news/"
 
-API_ENDPOINT = "http://localhost:8000/api/rest-auth/registration/"
-#API_ENDPOINT = "https://satelite-noticias.herokuapp.com/api/rest-auth/registration/"
+#API_ENDPOINT = "http://localhost:8000/api/rest-auth/registration/"
+API_ENDPOINT = "https://satelite-noticias.herokuapp.com/api/rest-auth/registration/"
 def job():
     print('Im working on it...')
     # Defining the api-endpoints  
@@ -86,7 +86,7 @@ def createNewsBot():
 
 #Llamado a la funcion afuera del job
 newsBotKey,newsBotCookie = createNewsBot()
-schedule.every(10).seconds.do(job)
+schedule.every(10).minutes.do(job)
 
 while True:
     schedule.run_pending()
