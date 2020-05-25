@@ -16,6 +16,8 @@ API_ENDPOINT_TO_POST2 = "https://satelite-de-noticias.herokuapp.com/api/news/"
 
 #API_ENDPOINT = "http://localhost:8000/api/rest-auth/registration/"
 API_ENDPOINT = "https://satelite-noticias.herokuapp.com/api/rest-auth/registration/"
+API_ENDPOINT2 = "https://satelite-de-noticias.herokuapp.com/api/rest-auth/registration/"
+
 def job():
     print('Im working on it...')
     # Defining the api-endpoints  
@@ -60,7 +62,7 @@ def job():
     for news_single in unjson:
         print(news_single)
         data = {"title": news_single["title"],"content": news_single["description"],"tags": ["tag1"]}
-        reply = requests.post(url = API_ENDPOINT_TO_POST, data = data, headers = {"Authorization": newsBotKey}) 
+        #reply = requests.post(url = API_ENDPOINT_TO_POST, data = data, headers = {"Authorization": newsBotKey}) 
         reply = requests.post(url = API_ENDPOINT_TO_POST2, data = data, headers = {"Authorization": newsBotKey}) 
         print(reply)
 
@@ -75,11 +77,14 @@ def createNewsBot():
             "password2": "changeme123"
 	
     }
-    reply = requests.post(url = API_ENDPOINT, data = data) 
+    #reply = requests.post(url = API_ENDPOINT, data = data)
+    reply = requests.post(url = API_ENDPOINT2, data = data)  
     print('esto fue lo que me respondieron')
     print(reply.content)
     print(json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True)). values() )   
+    #supposedStrKey = json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True))["key"]
     supposedStrKey = json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True))["key"]
+
     print(reply.cookies.items()[0][1])
     supposedStrCookie = reply.cookies.items()[0][1]
     print('-'*20)
