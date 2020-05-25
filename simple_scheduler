@@ -12,6 +12,7 @@ global newsBotCookie
 newsBotCookie = ""
 #API_ENDPOINT_TO_POST = "http://localhost:8000/api/news/"
 API_ENDPOINT_TO_POST = "https://satelite-noticias.herokuapp.com/api/news/"
+API_ENDPOINT_TO_POST2 = "https://satelite-de-noticias.herokuapp.com/api/news/"
 
 #API_ENDPOINT = "http://localhost:8000/api/rest-auth/registration/"
 API_ENDPOINT = "https://satelite-noticias.herokuapp.com/api/rest-auth/registration/"
@@ -60,6 +61,7 @@ def job():
         print(news_single)
         data = {"title": news_single["title"],"content": news_single["description"],"tags": ["tag1"]}
         reply = requests.post(url = API_ENDPOINT_TO_POST, data = data, headers = {"Authorization": newsBotKey}) 
+        reply = requests.post(url = API_ENDPOINT_TO_POST2, data = data, headers = {"Authorization": newsBotKey}) 
         print(reply)
 
 
