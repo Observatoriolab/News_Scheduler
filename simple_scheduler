@@ -11,12 +11,17 @@ newsBotKey = ""
 global newsBotCookie
 newsBotCookie = ""
 #API_ENDPOINT_TO_POST = "http://localhost:8000/api/news/"
-API_ENDPOINT_TO_POST = "https://satelite-noticias.herokuapp.com/api/news/"
-API_ENDPOINT_TO_POST2 = "https://satelite-de-noticias.herokuapp.com/api/news/"
+#API_ENDPOINT_TO_POST = "https://satelite-noticias.herokuapp.com/api/news/"
+API_ENDPOINT_TO_POST = "https://satelite-de-noticias.herokuapp.com/api/news/"
+
+#API_ENDPOINT_TO_POST = "https://satelitenoticias.herokuapp.com/api/news/"
 
 #API_ENDPOINT = "http://localhost:8000/api/rest-auth/registration/"
-API_ENDPOINT = "https://satelite-noticias.herokuapp.com/api/rest-auth/registration/"
-API_ENDPOINT2 = "https://satelite-de-noticias.herokuapp.com/api/rest-auth/registration/"
+API_ENDPOINT = "https://satelite-de-noticias.herokuapp.com/api/rest-auth/registration/"
+#API_ENDPOINT = "https://satelite-noticias.herokuapp.com/api/rest-auth/registration/"
+API_ENDPOINT_LOGIN = "https://satelite-de-noticias.herokuapp.com/api/rest-auth/login/"
+
+
 
 def job():
     print('Im working on it...')
@@ -63,7 +68,7 @@ def job():
         print(news_single)
         data = {"title": news_single["title"],"content": news_single["description"],"tags": ["tag1"]}
         #reply = requests.post(url = API_ENDPOINT_TO_POST, data = data, headers = {"Authorization": newsBotKey}) 
-        reply = requests.post(url = API_ENDPOINT_TO_POST2, data = data, headers = {"Authorization": newsBotKey}) 
+        reply = requests.post(url = API_ENDPOINT_TO_POST, data = data, headers = {"Authorization": newsBotKey}) 
         print(reply)
 
 
@@ -72,28 +77,41 @@ def createNewsBot():
     
     data = {
             "username": "NewsBot",
-            "email": "leiser.mahu@gmail.com",
+            "email": "randomnames@gmail.com",
             "password1":"changeme123",
             "password2": "changeme123"
 	
     }
+    data2 = {
+            "username": "NewsBot",
+            "password":"changeme123"	
+    }
     #reply = requests.post(url = API_ENDPOINT, data = data)
-    reply = requests.post(url = API_ENDPOINT2, data = data)  
+    reply = requests.post(url = API_ENDPOINT, data = data)  
     print('esto fue lo que me respondieron')
     print(reply.content)
-    print(json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True)). values() )   
-    #supposedStrKey = json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True))["key"]
-    supposedStrKey = json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True))["key"]
+    print(json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True)). values() )  
+    
+    try:
+        supposedStrKey = json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True))["key"]
+        print(supposedStrKey)
+        print(reply.cookies.items()[0][1])
+        supposedStrCookie = reply.cookies.items()[0][1]
+        print('-'*20)
+    except KeyError as e:
+        print ('I got a KeyError')
+        reply = requests.post(url = API_ENDPOINT_LOGIN, data = data2)  
+        supposedStrKey = json.loads(json.dumps(literal_eval(reply.content.decode('utf8')), indent=4, sort_keys=True))["key"]
+        print(supposedStrKey)
+        print(reply.cookies.items()[0][1])
+        supposedStrCookie = reply.cookies.items()[0][1]
+        print('-'*20)
 
-    print(reply.cookies.items()[0][1])
-    supposedStrCookie = reply.cookies.items()[0][1]
-    print('-'*20)
-    print(supposedStrKey)
-    return "Token "+ supposedStrKey, supposedStrCookie
+    return "Token "+ supposedStrKey, supposedStrCookie   
 
 #Llamado a la funcion afuera del job
 newsBotKey,newsBotCookie = createNewsBot()
-schedule.every(10).minutes.do(job)
+schedule.every(30).seconds.do(job)
 
 while True:
     schedule.run_pending()
