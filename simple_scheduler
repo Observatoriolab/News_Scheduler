@@ -3,6 +3,8 @@ import time
 import requests 
 import json
 import xmltodict
+#REGEX LIBRARY
+import re
 from ast import literal_eval
 
 #Variable global
@@ -10,18 +12,36 @@ global newsBotKey
 newsBotKey = ""
 global newsBotCookie
 newsBotCookie = ""
-#API_ENDPOINT_TO_POST = "http://localhost:8000/api/news/"
+#API_ENDPOINT_TO_POST = "http://localhost:8080/api/news/"
 #API_ENDPOINT_TO_POST = "https://satelite-noticias.herokuapp.com/api/news/"
 API_ENDPOINT_TO_POST = "https://satelite-de-noticias.herokuapp.com/api/news/"
 
 #API_ENDPOINT_TO_POST = "https://satelitenoticias.herokuapp.com/api/news/"
 
-#API_ENDPOINT = "http://localhost:8000/api/rest-auth/registration/"
+#API_ENDPOINT = "http://localhost:8080/api/rest-auth/registration/"
 API_ENDPOINT = "https://satelite-de-noticias.herokuapp.com/api/rest-auth/registration/"
 #API_ENDPOINT = "https://satelite-noticias.herokuapp.com/api/rest-auth/registration/"
 API_ENDPOINT_LOGIN = "https://satelite-de-noticias.herokuapp.com/api/rest-auth/login/"
 
+def substractStrings(str1,str2):
+    result =  "".join(str1.rsplit(str2))
+    return result
 
+def regexTitle(title):
+    axis = re.search(r"^[^:]*:", title)
+    withoutAxis = substractStrings(title,axis.group())
+    
+    print("----------------------------------------------------------------------------------------------------------------------\n")
+    print(withoutAxis)
+    print("escribo aqui")
+    print("----------------------------------------------------------------------------------------------------------------------\n")
+
+    actualAxis = re.search(r".* -",withoutAxis)
+    
+    print("----------------------------------------------------------------------------------------------------------------------\n")
+    print(actualAxis)
+    print("----------------------------------------------------------------------------------------------------------------------\n")
+    return actualAxis.group()
 
 def job():
     print('Im working on it...')
@@ -67,13 +87,28 @@ def job():
     #Aqui recien se tiene un ejemplo de noticia
     print('este es el kuky')
     print(newsBotCookie)
-    print(unjson)
+    #print(unjson)
     for news_single in unjson:
         print(news_single)
-        data = {"title": news_single["title"],"content": news_single["description"],"tags": ["tag1"]}
+        source = news_single["category"][0]["#text"] 
+        country = news_single["category"][1]["#text"]
+        axis = news_single["category"][2]["#text"]
+        date = news_single["pubDate"].replace(",","")
+        print("----------------------------------------------------------------------------------------------------------------------\n")
+        print(news_single["link"])
+        print("----------------------------------------------------------------------------------------------------------------------\n")
+        actualTitle = regexTitle(news_single["title"])
+        print("----------------------------------------------------------------------------------------------------------------------\n")
+        print(source)
+        print(country)
+        print(axis)
+        print(date)
+        print("----------------------------------------------------------------------------------------------------------------------\n")
+        data = {"title": actualTitle,"content": news_single["description"],"fullContent":news_single["link"],"tags": "", "source": source, "country": country, "axis": axis, "date": date}
         #reply = requests.post(url = API_ENDPOINT_TO_POST, data = data, headers = {"Authorization": newsBotKey}) 
         reply = requests.post(url = API_ENDPOINT_TO_POST, data = data, headers = {"Authorization": newsBotKey}) 
         print(reply)
+
 
 
 def createNewsBot():
