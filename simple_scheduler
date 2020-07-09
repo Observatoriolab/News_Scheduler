@@ -150,7 +150,7 @@ def createNewsBot():
 
 #Llamado a la funcion afuera del job
 newsBotKey,newsBotCookie = createNewsBot()
-schedule.every(30).seconds.do(job)
+schedule.every(6).hours.do(job)
 
 while True:
     schedule.run_pending()
