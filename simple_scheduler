@@ -93,7 +93,13 @@ def job():
         source = news_single["category"][0]["#text"] 
         country = news_single["category"][1]["#text"]
         axis = news_single["category"][2]["#text"]
-        date = news_single["pubDate"].replace(",","")
+        try:            
+            date = news_single["pubDate"].replace(",","")
+        
+        except KeyError:
+            date = ''
+        
+        
         print("----------------------------------------------------------------------------------------------------------------------\n")
         print(news_single["link"])
         print("----------------------------------------------------------------------------------------------------------------------\n")
