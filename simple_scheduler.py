@@ -87,7 +87,7 @@ def job():
         print(axis)
         print(date)
         print("----------------------------------------------------------------------------------------------------------------------\n")
-        data = {"title": actualTitle,"content": news_single["description"],"fullContent":news_single["link"],"tags": "", "source": source, "country": country, "axis_primary": axis, "axis_secondary": "", "date": date, "idBot": id}
+        data = {"title": actualTitle,"content": news_single["description"],"fullContent":news_single["link"],"tags": "", "source": source, "country": country, "axis_primary": axis, "axis_secondary": "", "date": date, "idBot": id, "type": "Fintech"}
         print("viendo que se va a enviar -->>>>>>>   ", data)
         reply = requests.post(url = API_ENDPOINT_TO_POST, data = data) 
         print(reply)
