@@ -87,7 +87,7 @@ def job():
         print(axis)
         print(date)
         print("----------------------------------------------------------------------------------------------------------------------\n")
-        data = {"title": actualTitle,"content": news_single["description"],"fullContent":news_single["link"],"tags": "", "source": source, "country": country, "axis_primary": axis, "axis_secondary": "", "date": date, "idBot": id, "type": "Fintech"}
+        data = {"title": actualTitle,"content_summary": news_single["description"],"link":news_single["link"],"tags": "", "source": source, "country": country, "axis_primary": axis, "axis_secondary": "", "date": date, "type": "Fintech"}
         print("viendo que se va a enviar -->>>>>>>   ", data)
         reply = requests.post(url = API_ENDPOINT_TO_POST, data = data) 
         print(reply)
@@ -117,7 +117,7 @@ def createNewsBot():
 
 #Llamado a la funcion afuera del job
 createNewsBot()
-schedule.every(1).minutes.do(job)
+schedule.every(360).minutes.do(job)
 #schedule.every().monday.at("14:09").do(job)
 
 
