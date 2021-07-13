@@ -8,7 +8,7 @@ import re
 from ast import literal_eval
 
 
-API_ENDPOINT_TO_POST = "https://satelite-noticias-api.herokuapp.com/news"
+API_ENDPOINT_TO_POST = "https://satelite-noticias-api.herokuapp.com/create_news"
 
 
 API_ENDPOINT_REGISTER = "https://satelite-noticias-api.herokuapp.com/registration"
@@ -87,7 +87,19 @@ def job():
         print(axis)
         print(date)
         print("----------------------------------------------------------------------------------------------------------------------\n")
-        data = {"title": actualTitle,"content_summary": news_single["description"],"link":news_single["link"],"tags": "", "source": source, "country": country, "axis_primary": axis, "axis_secondary": "", "date": date, "type": "Fintech"}
+        data = {"title": actualTitle,
+                "content_summary": news_single["description"],
+                "link":news_single["link"],
+                "tags": "",
+                "source": source,
+                "country": country,
+                "axis_primary": axis,
+                "axis_secondary": "",
+                "date": date,
+                "idBot": id,
+                "type": "Fintech"}
+
+
         print("viendo que se va a enviar -->>>>>>>   ", data)
         reply = requests.post(url = API_ENDPOINT_TO_POST, data = data) 
         print(reply)
