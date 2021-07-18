@@ -129,6 +129,7 @@ def createNewsBot():
 
 #Llamado a la funcion afuera del job
 createNewsBot()
+# 6 hrs
 schedule.every(360).minutes.do(job)
 #schedule.every().monday.at("14:09").do(job)
 
